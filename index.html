@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Tambahan CSS untuk menyesuaikan tampilan exit-menu */
+        #exit-menu {
+            margin-top: 20px; /* Menambahkan jarak antara menu utama dan exit-menu */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <!-- Name Input Form -->
+    <div id="name-form" class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6">Masukkan Nama Anda</h2>
+        <form id="nameInputForm">
+            <div class="mb-6">
+                <label class="block text-gray-700" for="userName">Nama</label>
+                <input class="w-full px-3 py-2 border rounded" type="text" id="userName" required>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Masuk</button>
+        </form>
+    </div>
+
+    <!-- Menu Selection -->
+    <div id="menu-selection" class="bg-white p-8 rounded shadow-md w-full max-w-sm hidden">
+        <h2 class="text-2xl font-bold mb-6">Selamat Datang, <span id="userDisplayName"></span></h2>
+        <button id="menu1" class="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full">Hal yang Disukai dari Saya</button>
+        <button id="menu2" class="bg-yellow-500 text-white px-4 py-2 rounded mb-4 w-full">Hal yang Tidak Disukai dari Saya</button>
+        <button id="menu3" class="bg-red-500 text-white px-4 py-2 rounded w-full">Pesan yang Ingin Disampaikan ke Saya</button>
+    </div>
+
+    <!-- Exit Menu -->
+    <div id="exit-menu" class="bg-white p-8 rounded shadow-md w-full max-w-sm hidden">
+        <h2 class="text-2xl font-bold mb-6">Terima kasih telah mengisi semua menu!</h2>
+        <button class="bg-red-500 text-white px-4 py-2 rounded" onclick="exit()">Keluar</button>
+    </div>
+
+    <!-- Notes Section -->
+    <div id="notes-section" class="bg-white p-8 rounded shadow-md w-full max-w-sm hidden">
+        <h2 id="note-title" class="text-2xl font-bold mb-6"></h2>
+        <textarea id="userNotes" class="w-full px-3 py-2 border rounded mb-4" rows="6"></textarea>
+        <button id="saveNotes" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+        <button id="backToMenu" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Kembali ke Menu</button>
+    </div>
+
+    <script>
+        document.getElementById('nameInputForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userName = document.getElementById('userName').value;
+            document.getElementById('userDisplayName').textContent = userName;
+            document.getElementById('name-form').classList.add('hidden');
+            document.getElementById('menu-selection').classList.remove('hidden');
+        });
+
+        let menu1_filled = false;
+        let menu2_filled = false;
+        let menu3_filled = false;
+
+        document.getElementById('menu1').addEventListener('click', function() {
+            menu1_filled = true;
+            showNotesSection('Hal yang Disukai dari Saya');
+        });
+
+        document.getElementById('menu2').addEventListener('click', function() {
+            menu2_filled = true;
+            showNotesSection('Hal yang Tidak Disukai dari Saya');
+        });
+
+        document.getElementById('menu3').addEventListener('click', function() {
+            menu3_filled = true;
+            showNotesSection('Pesan yang Ingin Disampaikan ke Saya');
+        });
+
+        document.getElementById('backToMenu').addEventListener('click', function() {
+            document.getElementById('notes-section').classList.add('hidden');
+            document.getElementById('menu-selection').classList.remove('hidden');
+            toggleExitMenu();
+        });
+
+        document.getElementById('saveNotes').addEventListener('click', function() {
+            const noteTitle = document.getElementById('note-title').textContent;
+            const userNotes = document.getElementById('userNotes').value;
+            localStorage.setItem(noteTitle, userNotes);
+            alert('Catatan tersimpan');
+            document.getElementById('notes-section').classList.add('hidden');
+            document.getElementById('menu-selection').classList.remove('hidden');
+            toggleExitMenu();
+        });
+
+        function showNotesSection(title) {
+            document.getElementById('note-title').textContent = title;
+            const savedNotes = localStorage.getItem(title);
+            document.getElementById('userNotes').value = savedNotes || '';
+            document.getElementById('menu-selection').classList.add('hidden');
+            document.getElementById('notes-section').classList.remove('hidden');
+            toggleExitMenu();
+        }
+
+        function toggleExitMenu() {
+            const exitMenu = document.getElementById('exit-menu');
+            if (menu1_filled && menu2_filled && menu3_filled) {
+                exitMenu.classList.remove('hidden');
+            } else {
+                exitMenu.classList.add('hidden');
+            }
+        }
+
+        function exit() {
+            alert('Terima kasih telah menggunakan website ini!');
+            window.location.href = "https://www.google.com"; // Contoh pengalihan ke Google setelah exit
+        }
+    </script>
+
+</body>
+</html>
